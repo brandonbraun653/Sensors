@@ -1,7 +1,7 @@
 #include "LSM9DS1.hpp"
 
 #ifdef DEBUG
-#include "include/exceptions.h"
+#include "Thor/include/exceptions.h"
 #endif
 
 using namespace ThorDef::GPIO;
@@ -160,8 +160,6 @@ uint16_t LSM9DS1::begin()
 	calcaRes();  // Calculate g / ADC tick, stored in aRes variable
 	
 	
-	
-	
 	// Now, initialize our hardware interface.
 	if(settings.device.commInterface == IMU_MODE_I2C)	// If we're using I2C
 		initI2C(); 	// Initialize I2C
@@ -177,8 +175,7 @@ uint16_t LSM9DS1::begin()
 	if (whoAmICombined != ((WHO_AM_I_AG_RSP << 8) | WHO_AM_I_M_RSP))
 		return 0;
 	
-	
-	uint8_t temp = xgReadByte(CTRL_REG8);
+	//volatile uint8_t temp = xgReadByte(CTRL_REG8);
 	
 	
 	// Gyro initialization stuff:
