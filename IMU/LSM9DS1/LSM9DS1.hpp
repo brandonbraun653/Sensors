@@ -15,6 +15,11 @@
 #include "Thor/include/gpio.h"
 #include "Thor/include/spi.h"
 
+// #include "../include/thor_config.h"
+// #include "../include/thor_definitions.h"
+// #include "../include/gpio.h"
+// #include "../include/spi.h"
+
 #ifdef USING_FREERTOS
 #include "FreeRTOS.h"
 #include "task.h"

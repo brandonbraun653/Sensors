@@ -2,6 +2,7 @@
 
 #ifdef DEBUG
 #include "Thor/include/exceptions.h"
+//#include "../include/exceptions.h"
 #endif
 
 using namespace ThorDef::GPIO;
@@ -1289,7 +1290,7 @@ void LSM9DS1::initSPI()
 	
 	SPI_InitTypeDef settings = Defaults::SPI::dflt_SPI_Init;
 	
-	//1EDGE, LO: works
+	//1EDGE, LO: nope
 	//1EDGE, HI: nope
 	//2EDGE, LO: works 
 	//2EDGE, HI: works 
