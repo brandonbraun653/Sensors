@@ -1,8 +1,8 @@
 #include "LSM9DS1.hpp"
 
 #ifdef DEBUG
-#include "Thor/include/exceptions.h"
-//#include "../include/exceptions.h"
+//#include "Thor/include/exceptions.h"
+#include "../include/exceptions.h"
 #endif
 
 using namespace ThorDef::GPIO;
