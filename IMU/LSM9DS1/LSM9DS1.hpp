@@ -10,15 +10,10 @@
 #include "LSM9DS1_Registers.h"
 
 /* Thor Includes */
-//#include "Thor/include/thor_config.h"
-//#include "Thor/include/thor_definitions.h"
-//#include "Thor/include/gpio.h"
-//#include "Thor/include/spi.h"
-
-#include "../include/thor_config.h"
-#include "../include/thor_definitions.h"
-#include "../include/gpio.h"
-#include "../include/spi.h"
+#include <Thor/include/config.hpp>
+#include <Thor/include/definitions.hpp>
+#include <Thor/include/gpio.hpp>
+#include <Thor/include/spi.hpp>
 
 #ifdef USING_FREERTOS
 #include "FreeRTOS.h"
