@@ -9,7 +9,12 @@
 #include "LSM9DS1_Types.hpp"
 #include "LSM9DS1_Registers.hpp"
 
-/* Chimera Includes */
+/* Thor Includes */
+//#include <Thor/include/config.hpp>
+//#include <Thor/include/definitions.hpp>
+//#include <Thor/include/gpio.hpp>
+//#include <Thor/include/spi.hpp>
+
 #include <Chimera/gpio.hpp>
 #include <Chimera/spi.hpp>
 
@@ -57,7 +62,7 @@ public:
 	float gRaw[3];		/* Raw converted output of gyroscope in dps */
 	float mRaw[3];		/* Raw converted output of magnetometer in gauss */
 	
-	LSM9DS1(uint8_t spiPeripheral, Chimera::GPIO::GPIOClass_sPtr xg_ss_pin, Chimera::GPIO::GPIOClass_sPtr m_ss_pin);
+	LSM9DS1(Chimera::SPI::SPIClass_sPtr spi_instance, Chimera::GPIO::GPIOClass_sPtr xg_ss_pin, Chimera::GPIO::GPIOClass_sPtr m_ss_pin);
 		
 	// begin() -- Initialize the gyro, accelerometer, and magnetometer.
 	// This will set up the scale and output rate of each sensor. The values set

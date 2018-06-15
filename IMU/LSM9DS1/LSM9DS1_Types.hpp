@@ -1,28 +1,8 @@
-/******************************************************************************
-LSM9DS1_Types.h
-SFE_LSM9DS1 Library - LSM9DS1 Types and Enumerations
-Jim Lindblom @ SparkFun Electronics
-Original Creation Date: April 21, 2015
-https://github.com/sparkfun/LSM9DS1_Breakout
-
-This file defines all types and enumerations used by the LSM9DS1 class.
-
-Development environment specifics:
-	IDE: Arduino 1.6.0
-	Hardware Platform: Arduino Uno
-	LSM9DS1 Breakout Version: 1.0
-
-This code is beerware; if you see me (or any other SparkFun employee) at the
-local, and you've found our code helpful, please buy us a round!
-
-Distributed as-is; no warranty is given.
-******************************************************************************/
-
 #ifndef __LSM9DS1_Types_H__
 #define __LSM9DS1_Types_H__
 
 #include <stdint.h>
-#include "LSM9DS1_Registers.h"
+#include "LSM9DS1_Registers.hpp"
 
 
 // The LSM9DS1 functions over both I2C or SPI. This library supports both.

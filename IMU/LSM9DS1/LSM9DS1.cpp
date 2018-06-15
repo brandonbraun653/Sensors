@@ -1,12 +1,7 @@
 #include "LSM9DS1.hpp"
 
-#ifdef DEBUG
-//#include "Thor/include/exceptions.h"
-#include "../include/exceptions.h"
-#endif
-
-using namespace ThorDef::GPIO;
-using namespace ThorDef::SPI;
+using namespace Chimera::GPIO;
+using namespace Chimera::SPI;
 
 // Sensor Sensitivity Constants
 // Values set according to the typical specifications provided in
@@ -29,11 +24,11 @@ using namespace ThorDef::SPI;
 /*--------------------------------------
  * Initialization & Calibration 
  *-------------------------------------*/
-LSM9DS1::LSM9DS1(SPIClass_sPtr spi_instance, GPIOClass_sPtr xg_ss_pin, GPIOClass_sPtr m_ss_pin)
+LSM9DS1::LSM9DS1(uint8_t spiPeripheral, GPIOClass_sPtr xg_ss_pin, GPIOClass_sPtr m_ss_pin)
 {
 	csPinXG = xg_ss_pin;
 	csPinM = m_ss_pin;
-	spi = spi_instance;
+	spi = boost::make_shared<Chimera::SPI::SPIClass>(spiPeripheral);
 	
 	initSettings(IMU_MODE_SPI, LSM9DS1_AG_ADDR(0), LSM9DS1_M_ADDR(0));
 	
@@ -146,7 +141,6 @@ void LSM9DS1::initSettings(interface_mode interface, uint8_t xgAddr, uint8_t mAd
 	_autoCalc = true;
 }
 
-
 uint16_t LSM9DS1::begin()
 {
 	//! Todo: don't use _xgAddress or _mAddress, duplicating memory
@@ -171,7 +165,7 @@ uint16_t LSM9DS1::begin()
 	// each device. Store those in a variable so we can return them.
 	uint8_t mTest = mReadByte(WHO_AM_I_M); 		// Read the gyro WHO_AM_I
 	uint8_t xgTest = xgReadByte(WHO_AM_I_XG); 	// Read the accel/mag WHO_AM_I
-	uint16_t whoAmICombined = (xgTest << 8) | mTest;
+	volatile uint16_t whoAmICombined = (xgTest << 8) | mTest;
 	
 	if (whoAmICombined != ((WHO_AM_I_AG_RSP << 8) | WHO_AM_I_M_RSP))
 		return 0;
@@ -266,11 +260,7 @@ void LSM9DS1::initGyro()
 	xgWriteByte(CTRL_REG3_G, tempRegValue);
 	
 	#ifdef DEBUG
-		#ifdef USING_FREERTOS
-		vTaskDelay((TickType_t)(1));
-		#else
-		HAL_Delay(1);
-		#endif
+	Chimera::delayMilliseconds(1);
 		
 	if (xgReadByte(CTRL_REG3_G) != tempRegValue)
 		BasicErrorHandler("CTRL_REG3_G write & read value not matched.");
@@ -291,11 +281,7 @@ void LSM9DS1::initGyro()
 	xgWriteByte(CTRL_REG4, tempRegValue);
 	
 	#ifdef DEBUG
-		#ifdef USING_FREERTOS
-		vTaskDelay((TickType_t)(1));
-		#else
-		HAL_Delay(1);
-		#endif
+	Chimera::delayMilliseconds(1);
 		
 	if (xgReadByte(CTRL_REG4) != tempRegValue)
 		BasicErrorHandler("CTRL_REG4 write & read value not matched.");
@@ -312,11 +298,7 @@ void LSM9DS1::initGyro()
 	xgWriteByte(ORIENT_CFG_G, tempRegValue);
 	
 	#ifdef DEBUG
-		#ifdef USING_FREERTOS
-		vTaskDelay((TickType_t)(1));
-		#else
-		HAL_Delay(1);
-		#endif
+	Chimera::delayMilliseconds(1);
 		
 	if (xgReadByte(ORIENT_CFG_G) != tempRegValue)
 		BasicErrorHandler("ORIENT_CFG_G write & read value not matched.");
@@ -341,11 +323,7 @@ void LSM9DS1::initAccel()
 	xgWriteByte(CTRL_REG5_XL, tempRegValue);
 	
 	#ifdef DEBUG
-		#ifdef USING_FREERTOS
-		vTaskDelay((TickType_t)(1));
-		#else
-		HAL_Delay(1);
-		#endif
+	Chimera::delayMilliseconds(1);
 		
 	if (xgReadByte(CTRL_REG5_XL) != tempRegValue)
 		BasicErrorHandler("CTRL_REG5_XL write & read value not matched.");
@@ -383,11 +361,7 @@ void LSM9DS1::initAccel()
 	xgWriteByte(CTRL_REG6_XL, tempRegValue);
 	
 	#ifdef DEBUG
-		#ifdef USING_FREERTOS
-		vTaskDelay((TickType_t)(1));
-		#else
-		HAL_Delay(1);
-		#endif
+	Chimera::delayMilliseconds(1);
 		
 	if (xgReadByte(CTRL_REG6_XL) != tempRegValue)
 		BasicErrorHandler("CTRL_REG6_XL write & read value not matched.");
@@ -409,11 +383,7 @@ void LSM9DS1::initAccel()
 	xgWriteByte(CTRL_REG7_XL, tempRegValue);
 	
 	#ifdef DEBUG
-		#ifdef USING_FREERTOS
-		vTaskDelay((TickType_t)(1));
-		#else
-		HAL_Delay(1);
-		#endif
+	Chimera::delayMilliseconds(1);
 		
 	if (xgReadByte(CTRL_REG7_XL) != tempRegValue)
 		BasicErrorHandler("CTRL_REG7_XL write & read value not matched.");
@@ -438,11 +408,7 @@ void LSM9DS1::initMag()
 	mWriteByte(CTRL_REG1_M, tempRegValue);
 	
 	#ifdef DEBUG
-		#ifdef USING_FREERTOS
-		vTaskDelay((TickType_t)(1));
-		#else
-		HAL_Delay(1);
-		#endif
+	Chimera::delayMilliseconds(1);
 		
 	if (mReadByte(CTRL_REG1_M) != tempRegValue)
 		BasicErrorHandler("CTRL_REG1_M write & read value not matched.");
@@ -471,11 +437,7 @@ void LSM9DS1::initMag()
 	mWriteByte(CTRL_REG2_M, tempRegValue);   // +/-4Gauss
 	
 	#ifdef DEBUG
-		#ifdef USING_FREERTOS
-		vTaskDelay((TickType_t)(1));
-		#else
-		HAL_Delay(1);
-		#endif
+	Chimera::delayMilliseconds(1);
 		
 	if (mReadByte(CTRL_REG2_M) != tempRegValue)
 		BasicErrorHandler("CTRL_REG2_M write & read value not matched.");
@@ -495,11 +457,7 @@ void LSM9DS1::initMag()
 	mWriteByte(CTRL_REG3_M, tempRegValue);   // Continuous conversion mode
 	
 	#ifdef DEBUG
-		#ifdef USING_FREERTOS
-		vTaskDelay((TickType_t)(1));
-		#else
-		HAL_Delay(1);
-		#endif
+	Chimera::delayMilliseconds(1);
 		
 	if (mReadByte(CTRL_REG3_M) != tempRegValue)
 		BasicErrorHandler("CTRL_REG3_M write & read value not matched.");
@@ -516,11 +474,7 @@ void LSM9DS1::initMag()
 	mWriteByte(CTRL_REG4_M, tempRegValue);
 	
 	#ifdef DEBUG
-		#ifdef USING_FREERTOS
-		vTaskDelay((TickType_t)(1));
-		#else
-		HAL_Delay(1);
-		#endif
+	Chimera::delayMilliseconds(1);
 		
 	if (mReadByte(CTRL_REG4_M) != tempRegValue)
 		BasicErrorHandler("CTRL_REG4_M write & read value not matched.");
@@ -534,11 +488,7 @@ void LSM9DS1::initMag()
 	mWriteByte(CTRL_REG5_M, tempRegValue);
 	
 	#ifdef DEBUG
-		#ifdef USING_FREERTOS
-		vTaskDelay((TickType_t)(1));
-		#else
-		HAL_Delay(1);
-		#endif
+	Chimera::delayMilliseconds(1);
 		
 	if (mReadByte(CTRL_REG5_M) != tempRegValue)
 		BasicErrorHandler("CTRL_REG5_M write & read value not matched.");
@@ -591,7 +541,7 @@ void LSM9DS1::calibrate(bool autoCalc)
 	}
 	for (ii = 0; ii < samples; ii++) 
 	{
-			// Read the gyro data stored in the FIFO
+		// Read the gyro data stored in the FIFO
 		readGyro();
 		gBiasRawTemp[0] += gx;
 		gBiasRawTemp[1] += gy;
@@ -623,7 +573,8 @@ void LSM9DS1::calibrateMag(bool loadIn)
 	
 	for(i = 0 ; i < 128 ; i++)
 	{
-		while (!magAvailable()) ;
+		while (!magAvailable());
+
 		readMag();
 		int16_t magTemp[3] = { 0, 0, 0 };
 		magTemp[0] = mx;		
@@ -802,6 +753,7 @@ void LSM9DS1::setGyroScale(uint16_t gScl)
 {
 	// Read current value of CTRL_REG1_G:
 	uint8_t ctrl1RegValue = xgReadByte(CTRL_REG1_G);
+
 	// Mask out scale bits (3 & 4):
 	ctrl1RegValue &= 0xE7;
 	switch (gScl)
@@ -827,6 +779,7 @@ void LSM9DS1::setAccelScale(uint8_t aScl)
 {
 	// We need to preserve the other bytes in CTRL_REG6_XL. So, first read it:
 	uint8_t tempRegValue = xgReadByte(CTRL_REG6_XL);
+
 	// Mask out accel scale bits:
 	tempRegValue &= 0xE7;
 	
@@ -858,6 +811,7 @@ void LSM9DS1::setMagScale(uint8_t mScl)
 {
 	// We need to preserve the other bytes in CTRL_REG6_XM. So, first read it:
 	uint8_t temp = mReadByte(CTRL_REG2_M);
+
 	// Then mask out the mag scale bits:
 	temp &= 0xFF ^ (0x3 << 5);
 	
@@ -901,11 +855,14 @@ void LSM9DS1::setGyroODR(uint8_t gRate)
 	{
 		// We need to preserve the other bytes in CTRL_REG1_G. So, first read it:
 		uint8_t temp = xgReadByte(CTRL_REG1_G);
+
 		// Then mask out the gyro ODR bits:
 		temp &= 0xFF ^ (0x7 << 5);
 		temp |= (gRate & 0x07) << 5;
+
 		// Update our settings struct
 		settings.gyro.sampleRate = gRate & 0x07;
+
 		// And write the new register value back into CTRL_REG1_G:
 		xgWriteByte(CTRL_REG1_G, temp);
 	}
@@ -918,11 +875,14 @@ void LSM9DS1::setAccelODR(uint8_t aRate)
 	{
 		// We need to preserve the other bytes in CTRL_REG1_XM. So, first read it:
 		uint8_t temp = xgReadByte(CTRL_REG6_XL);
+
 		// Then mask out the accel ODR bits:
 		temp &= 0x1F;
+
 		// Then shift in our new ODR bits:
 		temp |= ((aRate & 0x07) << 5);
 		settings.accel.sampleRate = aRate & 0x07;
+
 		// And write the new register value back into CTRL_REG1_XM:
 		xgWriteByte(CTRL_REG6_XL, temp);
 	}
@@ -932,11 +892,14 @@ void LSM9DS1::setMagODR(uint8_t mRate)
 {
 	// We need to preserve the other bytes in CTRL_REG5_XM. So, first read it:
 	uint8_t temp = mReadByte(CTRL_REG1_M);
+
 	// Then mask out the mag ODR bits:
 	temp &= 0xFF ^ (0x7 << 2);
+
 	// Then shift in our new ODR bits:
 	temp |= ((mRate & 0x07) << 2);
 	settings.mag.sampleRate = mRate & 0x07;
+
 	// And write the new register value back into CTRL_REG5_XM:
 	mWriteByte(CTRL_REG1_M, temp);
 }
@@ -1007,10 +970,7 @@ void LSM9DS1::calcmRes()
 /*--------------------------------------
  * Interrupt Settings 
  *-------------------------------------*/
-void LSM9DS1::configInt(interrupt_select interrupt,
-	uint8_t generator,
-	h_lactive activeLow,
-	pp_od pushPull)
+void LSM9DS1::configInt(interrupt_select interrupt, uint8_t generator, h_lactive activeLow, pp_od pushPull)
 {
 	// Write to INT1_CTRL or INT2_CTRL. [interupt] should already be one of
 	// those two values.
@@ -1283,31 +1243,41 @@ uint8_t LSM9DS1::mReadBytes(uint8_t subAddress, uint8_t * dest, uint8_t count)
 
 void LSM9DS1::initSPI()
 {
-	csPinXG->mode(OUTPUT_PP); csPinXG->write(HIGH);
-	csPinM->mode(OUTPUT_PP); csPinM->write(HIGH);
+	csPinXG->mode(OUTPUT_PUSH_PULL); 
+	csPinXG->write(HIGH);
+
+	csPinM->mode(OUTPUT_PUSH_PULL); 
+	csPinM->write(HIGH);
 	
 	//Note: Max freq for LSM9DS1 is ~10MHz
 	
-	SPI_InitTypeDef settings = Defaults::SPI::dflt_SPI_Init;
-	
+	//SPI_InitTypeDef settings = Thor::Defaults::SPI::dflt_SPI_Init;
+	//settings.CLKPhase = SPI_PHASE_2EDGE;
+	//settings.CLKPolarity = SPI_POLARITY_HIGH;
+	//settings.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_4;	//Sets to about 6MHz clock
+
+	//spi->setSSMode(Thor::Definitions::SPI::SS_MANUAL_CONTROL);
+	//spi->attachSettings(settings);
+	//spi->reInitialize();
+	//spi->begin(Thor::Definitions::SPI::EXTERNAL_SLAVE_SELECT);
+
 	//1EDGE, LO: nope
 	//1EDGE, HI: nope
 	//2EDGE, LO: works 
 	//2EDGE, HI: works 
+
+	Chimera::SPI::Setup settings;
+	settings.mode = MASTER;
+	settings.bitOrder = MSB_FIRST;
+	settings.dataSize = DATASIZE_8BIT;
+	settings.clockMode = MODE2;
+	settings.clockFrequency = 6000000;
 	
-	settings.CLKPhase = SPI_PHASE_2EDGE;
-	settings.CLKPolarity = SPI_POLARITY_HIGH;
-	settings.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_4;	//Sets to about 6MHz clock
-	
-	spi->setSSMode(SS_MANUAL_CONTROL);
-	spi->attachSettings(settings);			
-	spi->reInitialize();
-	spi->begin(EXTERNAL_SLAVE_SELECT);		
-	
-	/* Because this library isn't threaded, blocking mode must be utilized. In reality this
-	 * is not a big problem because reading a full set of data only takes tens of uS */
-	spi->setTxModeBlock();					
-	spi->setRxModeBlock();
+	spi->begin(settings);
+
+	/* Even though FreeRTOS is supported, SPI is still kept in blocking mode because reading 
+	 * a full set of data only takes tens of uS. This is far shorter than the tick rate of FreeRTOS. */
+	spi->setMode(SubPeripheral::TXRX, SubPeripheralMode::BLOCKING);
 }
 
 void LSM9DS1::SPIwriteByte(const GPIOClass_sPtr& csPin, uint8_t subAddress, uint8_t data)
@@ -1328,10 +1298,7 @@ uint8_t LSM9DS1::SPIreadByte(const GPIOClass_sPtr& csPin, uint8_t subAddress)
 	return temp;
 }
 
-uint8_t LSM9DS1::SPIreadBytes(const GPIOClass_sPtr& csPin,
-	uint8_t subAddress,
-	uint8_t * dest,
-	uint8_t count)
+uint8_t LSM9DS1::SPIreadBytes(const GPIOClass_sPtr& csPin, uint8_t subAddress, uint8_t * dest, uint8_t count)
 {
 	/* Indicate a read by setting MSB to 1. For Accelerometer and Gyroscope,
 	 * the read address will be automatically incremented if the IF_ADD_INC bit
@@ -1345,8 +1312,8 @@ uint8_t LSM9DS1::SPIreadBytes(const GPIOClass_sPtr& csPin,
 	
 	/* Read out the data using SPI transmit/receive */
 	csPin->write(LOW);
-	spi->write(&rAddress, 1);			
-	spi->write(_dummyBuffer, dest, count);
+	spi->write(&rAddress, 1, false);			
+	spi->write(_dummyBuffer, dest, count, true);
 	csPin->write(HIGH);
 	
 	return count;
@@ -1359,41 +1326,41 @@ void LSM9DS1::initI2C()
 
 void LSM9DS1::I2CwriteByte(uint8_t address, uint8_t subAddress, uint8_t data)
 {
-//Wire.beginTransmission(address);   // Initialize the Tx buffer
-//Wire.write(subAddress);            // Put slave register address in Tx buffer
-//Wire.write(data);                  // Put data in Tx buffer
-//Wire.endTransmission();            // Send the Tx buffer
+	//Wire.beginTransmission(address);   // Initialize the Tx buffer
+	//Wire.write(subAddress);            // Put slave register address in Tx buffer
+	//Wire.write(data);                  // Put data in Tx buffer
+	//Wire.endTransmission();            // Send the Tx buffer
 }
 
 uint8_t LSM9DS1::I2CreadByte(uint8_t address, uint8_t subAddress)
 {
 	uint8_t data;  // `data` will store the register data	
 	
-//Wire.beginTransmission(address);          // Initialize the Tx buffer
-//Wire.write(subAddress); 	                 // Put slave register address in Tx buffer
-//Wire.endTransmission(false);              // Send the Tx buffer, but send a restart to keep connection alive
-//Wire.requestFrom(address, (uint8_t) 1);   // Read one byte from slave register address 
-//
-//data = Wire.read();                       // Fill Rx buffer with result
+	//Wire.beginTransmission(address);          // Initialize the Tx buffer
+	//Wire.write(subAddress); 	                 // Put slave register address in Tx buffer
+	//Wire.endTransmission(false);              // Send the Tx buffer, but send a restart to keep connection alive
+	//Wire.requestFrom(address, (uint8_t) 1);   // Read one byte from slave register address 
+	//
+	//data = Wire.read();                       // Fill Rx buffer with result
 	return data;                              // Return data read from slave register
 }
 
 uint8_t LSM9DS1::I2CreadBytes(uint8_t address, uint8_t subAddress, uint8_t * dest, uint8_t count)
 {
-//byte retVal;
-//Wire.beginTransmission(address);       // Initialize the Tx buffer
-//// Next send the register to be read. OR with 0x80 to indicate multi-read.
-//Wire.write(subAddress | 0x80);         // Put slave register address in Tx buffer
-//retVal = Wire.endTransmission(false);  // Send Tx buffer, send a restart to keep connection alive
-//if(retVal != 0) // endTransmission should return 0 on success
-//	return 0;
-//
-//retVal = Wire.requestFrom(address, count);   // Read bytes from slave register address 
-//if(retVal != count)
-//	return 0;
-//
-//for (int i = 0; i < count;)
-//	dest[i++] = Wire.read();
+	//byte retVal;
+	//Wire.beginTransmission(address);       // Initialize the Tx buffer
+	//// Next send the register to be read. OR with 0x80 to indicate multi-read.
+	//Wire.write(subAddress | 0x80);         // Put slave register address in Tx buffer
+	//retVal = Wire.endTransmission(false);  // Send Tx buffer, send a restart to keep connection alive
+	//if(retVal != 0) // endTransmission should return 0 on success
+	//	return 0;
+	//
+	//retVal = Wire.requestFrom(address, count);   // Read bytes from slave register address 
+	//if(retVal != count)
+	//	return 0;
+	//
+	//for (int i = 0; i < count;)
+	//	dest[i++] = Wire.read();
 	
 	return count;
 }

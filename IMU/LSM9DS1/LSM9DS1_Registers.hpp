@@ -1,24 +1,3 @@
-/******************************************************************************
-LSM9DS1_Registers.h
-SFE_LSM9DS1 Library - LSM9DS1 Register Map
-Jim Lindblom @ SparkFun Electronics
-Original Creation Date: April 21, 2015
-https://github.com/sparkfun/LSM9DS1_Breakout
-
-This file defines all registers internal to the gyro/accel and magnetometer
-devices in the LSM9DS1.
-
-Development environment specifics:
-	IDE: Arduino 1.6.0
-	Hardware Platform: Arduino Uno
-	LSM9DS1 Breakout Version: 1.0
-
-This code is beerware; if you see me (or any other SparkFun employee) at the
-local, and you've found our code helpful, please buy us a round!
-
-Distributed as-is; no warranty is given.
-******************************************************************************/
-
 #ifndef __LSM9DS1_Registers_H__
 #define __LSM9DS1_Registers_H__
 
