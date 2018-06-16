@@ -216,11 +216,7 @@ void LSM9DS1::initGyro()
 	xgWriteByte(CTRL_REG1_G, tempRegValue);
 	
 	#ifdef DEBUG
-		#ifdef USING_FREERTOS
-		vTaskDelay((TickType_t)(1));
-		#else
-		HAL_Delay(1);
-		#endif
+	Chimera::delayMilliseconds(1);
 		
 	if (xgReadByte(CTRL_REG1_G) != tempRegValue)
 		BasicErrorHandler("CTRL_REG1_G write & read value not matched.");
@@ -236,11 +232,7 @@ void LSM9DS1::initGyro()
 	xgWriteByte(CTRL_REG2_G, tempRegValue);	
 	
 	#ifdef DEBUG
-		#ifdef USING_FREERTOS
-		vTaskDelay((TickType_t)(1));
-		#else
-		HAL_Delay(1);
-		#endif
+	Chimera::delayMilliseconds(1);
 		
 	if (xgReadByte(CTRL_REG2_G) != tempRegValue)
 		BasicErrorHandler("CTRL_REG2_G write & read value not matched.");
@@ -316,7 +308,7 @@ void LSM9DS1::initAccel()
 	//	Zen_XL - Z-axis output enabled
 	//	Yen_XL - Y-axis output enabled
 	//	Xen_XL - X-axis output enabled
-	if(settings.accel.enableZ) tempRegValue |= (1 << 5);
+	if (settings.accel.enableZ) tempRegValue |= (1 << 5);
 	if (settings.accel.enableY) tempRegValue |= (1 << 4);
 	if (settings.accel.enableX) tempRegValue |= (1 << 3);
 	
@@ -324,8 +316,8 @@ void LSM9DS1::initAccel()
 	
 	#ifdef DEBUG
 	Chimera::delayMilliseconds(1);
-		
-	if (xgReadByte(CTRL_REG5_XL) != tempRegValue)
+	volatile auto tempResult = xgReadByte(CTRL_REG5_XL);
+	if (tempResult != tempRegValue)
 		BasicErrorHandler("CTRL_REG5_XL write & read value not matched.");
 	#endif
 	
