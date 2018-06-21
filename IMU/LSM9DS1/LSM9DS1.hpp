@@ -5,19 +5,13 @@
 /* C/C++ Includes */
 #include <stdint.h>
 
-/* Library Includes */
-#include "LSM9DS1_Types.hpp"
-#include "LSM9DS1_Registers.hpp"
-
 /* Chimera Includes */
 #include <Chimera/gpio.hpp>
 #include <Chimera/spi.hpp>
 
-#ifdef USING_FREERTOS
-#include "FreeRTOS.h"
-#include "task.h"
-#endif
-
+/* Driver Includes */
+#include "LSM9DS1_Types.hpp"
+#include "LSM9DS1_Registers.hpp"
 
 #define LSM9DS1_AG_ADDR(sa0)	((sa0) == 0 ? 0x6A : 0x6B)
 #define LSM9DS1_M_ADDR(sa1)		((sa1) == 0 ? 0x1C : 0x1E)
@@ -277,12 +271,15 @@ public:
 	//	- enable: true = enable, false = disable.
 	void enableFIFO(bool enable = true);
 	
-	// setFIFO() - Configure FIFO mode and Threshold
+	// setFIFO() - 
 	// Input:
-	//	- fifoMode: Set FIFO mode to off, FIFO (stop when full), continuous, bypass
+	//	- fifoMode: 
 	//	  Possible inputs: FIFO_OFF, FIFO_THS, FIFO_CONT_TRIGGER, FIFO_OFF_TRIGGER, FIFO_CONT
-	//	- fifoThs: FIFO threshold level setting
-	//	  Any value from 0-0x1F is acceptable.
+
+	/**	Configure FIFO mode and Threshold
+	 *	@param[in]	fifoMode	Set FIFO mode, of type fifoMode_type
+	 *	@param[in]	fifoThs		FIFO threshold level setting (range: 0-0x1F)
+	 */
 	void setFIFO(fifoMode_type fifoMode, uint8_t fifoThs);
 	
 	// getFIFOSamples() - Get number of FIFO samples
@@ -295,7 +292,7 @@ protected:
 	Chimera::GPIO::GPIOClass_sPtr csPinM;	/* Chip select for magnetometer */
 	Chimera::SPI::SPIClass_sPtr spi;		/* SPI Peripheral */
 	
-	uint8_t _dummyBuffer[32];
+	uint8_t _dummyBuffer[32];				/**< Used for creating/receiving data between the chip and spi controller */
 	
 	
 	// x_mAddress and gAddress store the I2C address or SPI chip select pin
