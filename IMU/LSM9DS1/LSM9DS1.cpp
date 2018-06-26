@@ -2,6 +2,7 @@
 #include <memory>
 
 /* Chimera Includes */
+#include <Chimera/utilities.hpp>
 #include <Chimera/logging.hpp>
 
 /* Driver Includes */
@@ -32,11 +33,11 @@ using namespace Chimera::Logging;
 /*--------------------------------------
  * Initialization & Calibration 
  *-------------------------------------*/
-LSM9DS1::LSM9DS1(uint8_t spiPeripheral, GPIOClass_sPtr xg_ss_pin, GPIOClass_sPtr m_ss_pin)
+LSM9DS1::LSM9DS1(uint8_t spiPeripheral, Chimera::GPIO::Port SSPort_xg, uint8_t SSPin_xg, Chimera::GPIO::Port SSPort_mag, uint8_t SSPin_mag)
 {
-	csPinXG = xg_ss_pin;
-	csPinM = m_ss_pin;
-	spi = std::make_shared<Chimera::SPI::SPIClass>(spiPeripheral);
+	spi = Chimera::make_unique<Chimera::SPI::SPIClass>(spiPeripheral);
+	csPinXG = Chimera::make_unique<Chimera::GPIO::GPIOClass>(SSPort_xg, SSPin_xg);
+	csPinM = Chimera::make_unique<Chimera::GPIO::GPIOClass>(SSPort_mag, SSPin_mag);
 	
 	initSettings(IMU_MODE_SPI, LSM9DS1_AG_ADDR(0), LSM9DS1_M_ADDR(0));
 	

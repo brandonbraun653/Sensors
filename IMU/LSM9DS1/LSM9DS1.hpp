@@ -51,7 +51,7 @@ public:
 	float gRaw[3];		/* Raw converted output of gyroscope in dps */
 	float mRaw[3];		/* Raw converted output of magnetometer in gauss */
 	
-	LSM9DS1(uint8_t spiPeripheral, Chimera::GPIO::GPIOClass_sPtr xg_ss_pin, Chimera::GPIO::GPIOClass_sPtr m_ss_pin);
+	LSM9DS1(uint8_t spiPeripheral, Chimera::GPIO::Port SSPort_xg, uint8_t SSPin_xg, Chimera::GPIO::Port SSPort_mag, uint8_t SSPin_mag);
 		
 	// begin() -- Initialize the gyro, accelerometer, and magnetometer.
 	// This will set up the scale and output rate of each sensor. The values set
