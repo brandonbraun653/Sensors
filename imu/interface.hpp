@@ -5,18 +5,17 @@
  *  Description:
  *    Describes an interface for interacting with generic IMU devices
  *
- *  2019 | Brandon Braun | brandonbraun653@gmail.com
+ *  2019-2020 | Brandon Braun | brandonbraun653@gmail.com
  ********************************************************************************/
 
 #pragma once
 #ifndef CHIMERA_IMU_INTERFACE_HPP
 #define CHIMERA_IMU_INTERFACE_HPP
 
-
 /* Chimera Includes */
 #include <Chimera/chimera.hpp>
-#include <Chimera/modules/sensors/imu/imu_types.hpp>
 #include <Chimera/types/common_types.hpp>
+#include <imu/types.hpp>
 
 namespace Chimera::Modules::IMU
 {
@@ -31,7 +30,7 @@ namespace Chimera::Modules::IMU
 
     virtual Chimera::Status_t reset() = 0;
 
-    virtual Chimera::Status_t measure( const Sensor_t sensor, void *const measurement, const size_t size ) = 0;
+    virtual Chimera::Status_t measure( const Sensor_t sensor, void* const measurement, const size_t size ) = 0;
   };
 
   class Interface9DOF : public CommonInterface
@@ -40,7 +39,7 @@ namespace Chimera::Modules::IMU
     virtual ~Interface9DOF() = default;
 
     virtual Chimera::Status_t assignDOF( const Sensor_t sensor0 = Sensor_t::ACCEL, const Sensor_t sensor1 = Sensor_t::GYRO,
-                                         const Sensor_t sensor2 = Sensor_t::MAG ) = 0;
+      const Sensor_t sensor2 = Sensor_t::MAG ) = 0;
   };
 }  // namespace Chimera::Modules::IMU
 

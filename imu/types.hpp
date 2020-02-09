@@ -5,7 +5,7 @@
  *  Description:
  *    Describes types for interacting with generic IMU devices
  *
- *  2019 | Brandon Braun | brandonbraun653@gmail.com
+ *  2019-2020 | Brandon Braun | brandonbraun653@gmail.com
  ********************************************************************************/
 
 #pragma once
@@ -19,10 +19,8 @@
 /* Eigen Includes */
 #include <Eigen/Core>
 
-/* Chimera Includes */
-#include <Chimera/constants/physics.hpp>
 
-namespace Chimera::Modules::IMU
+namespace Aurora::Sensors::IMU
 {
   /*------------------------------------------------
   Orthogonal 3DOF measurement accessors
