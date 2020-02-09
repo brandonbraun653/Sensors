@@ -1,0 +1,6 @@
+[submodule "imu/lsm9ds0"]
+	path = imu/lsm9ds0
+	url = https://github.com/brandonbraun653/LSM9DS0.git
+[submodule "imu/lsm9ds1"]
+	path = imu/lsm9ds1
+	url = https://github.com/brandonbraun653/LSM9DS1.git
